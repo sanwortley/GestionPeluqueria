@@ -1,0 +1,64 @@
+/* src/components/Navbar.css */
+
+/* Contenedor de la barra de navegación */
+.navbar {
+  background-color: #222; /* Gris oscuro para el fondo */
+  padding: 15px 25px; /* Espaciado cómodo */
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  font-family: 'Press Start 2P', cursive; /* Fuente pixelada para el toque urbano */
+  text-align: center; /* Centrar el contenido */
+  box-shadow: none; /* Sin sombras para un diseño limpio */
+}
+
+/* Lista de elementos de la barra de navegación */
+.navbar-list {
+  list-style-type: none;
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+}
+
+/* Elementos individuales de la lista */
+.navbar-item {
+  margin: 0 15px; /* Espaciado entre los elementos */
+}
+
+/* Estilo de los enlaces de la barra de navegación */
+.navbar-link {
+  text-decoration: none;
+  color: #fff; /* Texto blanco */
+  font-size: 16px;
+  font-weight: 400; /* Peso de fuente más bajo */
+  text-transform: none; /* Sin mayúsculas */
+  padding: 12px 20px;
+  border-radius: 8px; /* Bordes redondeados */
+  background-color: transparent;
+  transition: all 0.3s ease;
+  display: inline-block; /* Para asegurarse de que el padding sea consistente */
+}
+
+/* Estilo cuando el enlace está en hover o activo */
+.navbar-link:hover,
+.navbar-link.active {
+  background-color: #444; /* Gris oscuro al pasar el ratón */
+  color: #fff;
+  transform: scale(1.05); /* Ligero aumento de tamaño */
+}
+
+/* Estilo cuando el enlace está enfocado */
+.navbar-link:focus {
+  outline: none;
+  background-color: #333; /* Fondo más oscuro al enfocar */
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.7); /* Sombra verde */
+}
+
+/* Estilo cuando el enlace es activado (click) */
+.navbar-link:active {
+  background-color: #555; /* Gris intermedio */
+  transform: scale(0.98); /* Efecto de pulsación */
+}

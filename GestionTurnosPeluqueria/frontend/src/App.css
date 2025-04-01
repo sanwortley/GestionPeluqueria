@@ -1,0 +1,50 @@
+.turno {
+  background-color: #ffffff; /* Fondo blanco para cada turno */
+  border: 1px solid #ccc; /* Borde sutil */
+  border-radius: 8px; /* Bordes redondeados */
+  padding: 20px;
+  margin: 10px 0; /* Separación entre turnos */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra suave para darle profundidad */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.turno .titulo {
+  font-size: 18px;
+  font-weight: bold;
+  color: #5a3e36;
+  margin-bottom: 10px;
+}
+
+.turno .detalle {
+  font-size: 16px;
+  color: #888;
+}
+
+.turno .fecha {
+  font-size: 14px;
+  color: #5a3e36;
+  margin-top: 10px;
+}
+
+.turno .estado {
+  font-size: 14px;
+  color: #a67b5b;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+.turnos-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  background-color: #f9f9f9;
+}
+h1 {
+  text-align: center;
+  font-size: 2rem;
+  color: #333;
+  margin-top: 80px;
+}

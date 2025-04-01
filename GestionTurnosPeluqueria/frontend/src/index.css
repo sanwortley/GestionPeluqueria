@@ -1,0 +1,17 @@
+body {
+  margin: 0;
+  font-family: 'Open Sans', sans-serif;
+  background-color: #f8f4f0; /* Un tono beige elegante */
+  color: #333;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3 {
+  font-family: 'Playfair Display', serif;
+  color: #5a3e36; /* Un tono marrón sofisticado */
+}
+
+code {
+  font-family: 'Courier New', monospace;
+}

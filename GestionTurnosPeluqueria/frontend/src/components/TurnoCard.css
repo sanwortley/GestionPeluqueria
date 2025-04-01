@@ -1,0 +1,56 @@
+/* TurnoCard.css */
+
+/* Estilo para cada tarjeta de turno */
+.turno-card {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e0e0e0;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.turno-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Cabecera de la tarjeta */
+.turno-card-header {
+  margin-bottom: 15px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+}
+
+.turno-title {
+  font-size: 22px;
+  color: #5a3e36; /* Color café */
+  margin: 0;
+}
+
+.turno-cliente {
+  font-size: 16px;
+  color: #888; /* Color gris claro */
+  margin: 0;
+}
+
+/* Cuerpo de la tarjeta */
+.turno-card-body {
+  margin-top: 10px;
+}
+
+.turno-fecha, .turno-hora {
+  font-size: 14px;
+  color: #5a3e36; /* Color café */
+}
+
+.turno-card p {
+  margin: 10px 0;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.turno-card p span {
+  font-weight: bold;
+  color: #555;
+}
