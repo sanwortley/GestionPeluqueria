@@ -5,7 +5,7 @@ import 'react-calendar/dist/Calendar.css'; // Importa los estilos
 import './Home.css'; // Importa los estilos de la página
 
 const Home = () => {
-  const [turnos, setTurnos] = useState([]);  // Estado para almacenar los turnos
+  const [turnos, setTurnos] = useState([]);
   const [fechaSeleccionada, setFechaSeleccionada] = useState('');
   const [horariosDisponibles, setHorariosDisponibles] = useState([]);
   const [horarioSeleccionado, setHorarioSeleccionado] = useState('');
@@ -13,31 +13,34 @@ const Home = () => {
   const [cliente, setCliente] = useState('');
   const [servicio, setServicio] = useState('');
   const [mensajeExito, setMensajeExito] = useState('');
-  const [confirmacionVisible, setConfirmacionVisible] = useState(false); // Estado para la confirmación
+  const [confirmacionVisible, setConfirmacionVisible] = useState(false);
+
   const hoy = new Date();
   const semanaSiguiente = new Date();
-  semanaSiguiente.setDate(hoy.getDate() + 13); // Fecha máxima es 13 días después
+  semanaSiguiente.setDate(hoy.getDate() + 13);
 
-  // Llamada a la API para obtener los turnos
+  const cancelarConfirmacion = () => {
+    setConfirmacionVisible(false);
+  };
+
   useEffect(() => {
     const fetchTurnos = async () => {
       try {
-        const data = await getTurnos();  // Llamamos a la API para obtener los turnos
+        const data = await getTurnos();
         if (Array.isArray(data)) {
-          setTurnos(data); // Solo se actualiza si los datos son un arreglo
+          setTurnos(data);
         } else {
           console.error('Los datos de turnos no son un arreglo:', data);
-          setTurnos([]);  // En caso de error, inicializamos como un arreglo vacío
+          setTurnos([]);
         }
       } catch (error) {
         console.error('Error al obtener los turnos:', error);
-        setTurnos([]);  // En caso de error en la llamada, también inicializamos como un arreglo vacío
+        setTurnos([]);
       }
     };
     fetchTurnos();
   }, [fechaSeleccionada]);
 
-  // Función para manejar la selección de fechas
   const handleDateChange = (newDate) => {
     const nuevaFecha = newDate.toISOString().split('T')[0];
     setFechaSeleccionada(nuevaFecha);
@@ -47,36 +50,52 @@ const Home = () => {
 
   const actualizarHorariosDisponibles = (fechaSeleccionada) => {
     const horarios = [];
-    let hora = 10;
+    const turnosDelDia = (turnos || []).filter(t => t.fecha === fechaSeleccionada).map(t => t.hora); // Filtra los turnos del día seleccionado
+    const ahora = new Date(); // Hora actual
+    let hora = 10; // Empezamos a las 10 de la mañana
     let minutos = 0;
-
-    // Verificar que turnos no sea undefined o vacío
-    const turnosDelDia = (turnos || []).filter(t => t.fecha === fechaSeleccionada).map(t => t.hora);
-
-    for (let i = 0; i < 14; i++) {
+    
+    // Horarios de la mañana de 10:00 a 13:00
+    while (hora < 13) {
       const horaStr = `${hora.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}`;
-      const ahora = new Date(); // Hora actual
       const horaSeleccionada = new Date(fechaSeleccionada);
       horaSeleccionada.setHours(hora);
       horaSeleccionada.setMinutes(minutos);
-
-      // Verificar si el horario ya ha pasado
-      if (horaSeleccionada < ahora || turnosDelDia.includes(horaStr)) {
-        continue; // No mostrar horarios pasados o ya reservados
+  
+      // Verifica que el horario no haya pasado y no esté reservado
+      if (horaSeleccionada > ahora && !turnosDelDia.includes(horaStr)) {
+        horarios.push(horaStr);
       }
-
-      horarios.push(horaStr);
-
-      minutos += 45;
+  
+      minutos += 45;  // Se suman 45 minutos después de cada turno
       if (minutos >= 60) {
-        minutos = 0;
-        hora++;
-        if (hora === 14) hora = 14; // Salta a 14:45
-        if (hora === 14 && minutos === 0) minutos = 45;
+        minutos -= 60;  // Restamos 60 minutos si sobrepasa una hora
+        hora++;  // Aumentamos la hora en 1
       }
     }
-
-    setHorariosDisponibles(horarios);
+  
+    // Horarios de la tarde/noche de 15:00 a 21:00
+    hora = 15; // Empezamos a las 15:00
+    minutos = 0; // Reiniciamos los minutos para la tarde
+    while (hora < 21) {
+      const horaStr = `${hora.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}`;
+      const horaSeleccionada = new Date(fechaSeleccionada);
+      horaSeleccionada.setHours(hora);
+      horaSeleccionada.setMinutes(minutos);
+  
+      // Verifica que el horario no haya pasado y no esté reservado
+      if (horaSeleccionada > ahora && !turnosDelDia.includes(horaStr)) {
+        horarios.push(horaStr);
+      }
+  
+      minutos += 45;  // Se suman 45 minutos después de cada turno
+      if (minutos >= 60) {
+        minutos -= 60;  // Restamos 60 minutos si sobrepasa una hora
+        hora++;  // Aumentamos la hora en 1
+      }
+    }
+  
+    setHorariosDisponibles(horarios); // Actualiza el estado con los horarios disponibles
   };
 
   const handleHorarioClick = (hora) => {
@@ -86,36 +105,37 @@ const Home = () => {
 
   const confirmarTurno = async () => {
     if (!horarioSeleccionado || !cliente || !servicio) return;
-
+  
     // Validación de que no se pueda crear turno en fin de semana
     const fechaSeleccionadaDate = new Date(fechaSeleccionada);
     const diaSeleccionado = fechaSeleccionadaDate.getDay(); // 0 es domingo, 6 es sábado
-
+  
     if (diaSeleccionado === 0 || diaSeleccionado === 6) {
       alert('No se pueden crear turnos los fines de semana.');
       setConfirmacionVisible(false); // Cerrar la ventana de confirmación
       return;
     }
-
+  
     // Crear el turno
     await createTurno({ cliente, fecha: fechaSeleccionada, hora: horarioSeleccionado, servicio });
     setMensajeExito('¡Turno creado correctamente!');
-    setTimeout(() => setMensajeExito(''), 8000); // Mostrar mensaje por 3 segundos
-
-    // Limpiar el formulario
-    setCliente('');
-    setFechaSeleccionada('');
-    setServicio('');
-    setHorarioSeleccionado('');
-    setHorariosDisponibles([]);
-    setModalVisible(false);
-    setConfirmacionVisible(false); // Cerrar la ventana de confirmación
+  
+    // Esperar 3 segundos antes de limpiar el formulario y cerrar el modal
+    setTimeout(() => {
+      setMensajeExito(''); // Limpiar el mensaje de éxito
+      setCliente(''); // Limpiar el nombre del cliente
+      setFechaSeleccionada(''); // Limpiar la fecha seleccionada
+      setServicio(''); // Limpiar el servicio seleccionado
+      setHorarioSeleccionado(''); // Limpiar el horario seleccionado
+      setHorariosDisponibles([]); // Limpiar los horarios disponibles
+      setModalVisible(false); // Cerrar el modal de creación de turno
+      setConfirmacionVisible(false); // Cerrar la ventana de confirmación
+    }, 3000); // 3 segundos
+  
+    // Cerrar la ventana de confirmación inmediatamente después de confirmar el turno
+    setConfirmacionVisible(false); // Esta línea cierra la ventana de confirmación después de crear el turno
   };
-
-  const cancelarConfirmacion = () => {
-    setConfirmacionVisible(false); // Cerrar la ventana emergente de confirmación
-  };
-
+  
   // Función para determinar si el día es un fin de semana (sábado o domingo)
   const esFinDeSemana = (fecha) => {
     const dia = new Date(fecha).getDay(); // 0 es domingo, 6 es sábado
@@ -140,7 +160,7 @@ const Home = () => {
   return (
     <div className="main-content">
       <h1>Roma Cabello</h1>
-      
+  
       {/* Calendario */}
       <div className="calendar-container">
         <Calendar
@@ -152,7 +172,7 @@ const Home = () => {
           tileClassName={tileClassName}  // Asignamos el estilo a los días del calendario
         />
       </div>
-
+  
       {/* Modal con el formulario para crear un turno */}
       {modalVisible && (
         <div className="disponibilidad-overlay">
@@ -171,7 +191,7 @@ const Home = () => {
                 <p>No hay horarios disponibles</p>
               )}
             </div>
-
+  
             {horarioSeleccionado && (
               <form className="turno-form">
                 <input 
@@ -196,12 +216,12 @@ const Home = () => {
                 </button>
               </form>
             )}
-
+  
             {mensajeExito && <div className="mensaje-exito">{mensajeExito}</div>}
           </div>
         </div>
       )}
-
+  
       {/* Ventana emergente de confirmación */}
       {confirmacionVisible && (
         <div className="modal-confirmacion">

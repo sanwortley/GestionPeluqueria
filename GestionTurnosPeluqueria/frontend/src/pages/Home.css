@@ -11,20 +11,20 @@ h1 {
     margin: 20px 0; /* Margen para que no quede pegado a los otros elementos */
     letter-spacing: 2px; /* Un pequeño espaciado entre las letras para dar un toque urbano */
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Sombra sutil para dar profundidad */
-  }
-  
-  /* Estilo cuando el h1 está en hover */
-  h1:hover {
+}
+
+/* Estilo cuando el h1 está en hover */
+h1:hover {
     color: #4CAF50; /* Cambiar color a verde al pasar el ratón */
     transform: scale(1.05); /* Agrandar ligeramente al pasar el ratón */
     transition: all 0.3s ease; /* Transición suave */
-  }
-  
-  /* Estilo cuando el h1 está activo (al hacer click) */
-  h1:active {
+}
+
+/* Estilo cuando el h1 está activo (al hacer click) */
+h1:active {
     transform: scale(0.98); /* Efecto de pulsación */
-  }
-  
+}
+
 .main-content {
     font-family: 'Arial', sans-serif;
     text-align: center;
@@ -64,32 +64,38 @@ h1 {
 
 .disponibilidad-modal {
     background: white;
-    padding: 20px;
+    padding: 30px;
     border-radius: 10px;
-    width: 350px;
+    width: 500px; /* Modal más grande */
     position: relative;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
     text-align: center;
 }
 
+/* Estilo para el botón de cerrar (la cruz) */
 .close-button {
     position: absolute;
-    top: 10px;
-    right: 15px;
-    background: red;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    font-size: 16px;
-    border-radius: 5px;
+    top: 10px; /* Ajusta la distancia desde la parte superior */
+    right: 10px; /* Ajusta la distancia desde la parte derecha */
+    background: none; /* Elimina el fondo */
+    color: #333; /* Color oscuro para la cruz */
+    border: none; /* Elimina el borde */
+    font-size: 24px; /* Tamaño de la cruz más pequeño */
+    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+    font-family: 'Press Start 2P', cursive; /* Fuente consistente con el estilo general */
+    transition: color 0.3s ease; /* Transición suave para el color */
+}
+
+/* Efecto hover para la cruz */
+.close-button:hover {
+    color: #d9534f; /* Cambia el color de la cruz a rojo al pasar el ratón */
+    transform: scale(1.1); /* Aumenta ligeramente el tamaño al pasar el ratón */
 }
 
 /* Horarios disponibles */
 .horarios-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    display: grid; /* Usar grid para organizar los horarios */
+    grid-template-columns: repeat(4, 1fr); /* 4 columnas */
     gap: 10px;
     margin: 15px 0;
 }
@@ -105,6 +111,7 @@ h1 {
     font-family: 'Press Start 2P', cursive; /* Fuente estilo barrio */
     transition: background-color 0.3s, transform 0.3s ease; /* Transiciones suaves */
     text-transform: uppercase; /* Letras en mayúsculas */
+    font-size: 12px; /* Fuente más pequeña */
 }
 
 /* Efecto hover para el botón de horario */
@@ -218,9 +225,7 @@ h1 {
     transform: scale(1.05); /* Efecto de agrandamiento */
 }
 
-
 /* Aumentar el tamaño del calendario, pero hacerlo más estrecho */
-/* Aumentar el tamaño del calendario y hacerlo más estrecho */
 /* Fuente personalizada para hacer la letra más bonita */
 /* Fuente simple y urbana */
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap'); /* Fuente pixelada que recuerda a un estilo más urbano y sencillo */
@@ -254,54 +259,5 @@ h1 {
     font-family: 'Press Start 2P', cursive; /* Fuente pixelada para los días */
     border-radius: 6px; /* Bordes redondeados */
     text-align: center;
-    background-color: #ddd; /* Fondo gris claro para los días */
-    color: #333; /* Color oscuro para el texto */
-    transition: background-color 0.3s ease; /* Efecto suave al pasar el cursor */
-}
-
-/* Efecto al pasar el ratón sobre los días */
-.react-calendar__tile:hover {
-    background-color: #bbb; /* Fondo gris más oscuro */
-    cursor: pointer;
-}
-
-/* Estilo para los botones de navegación */
-.react-calendar__navigation button {
-    font-size: 18px !important;
-    padding: 8px;
-    font-family: 'Press Start 2P', cursive;
-    background-color: transparent; /* Sin fondo */
-    color: #333;
-    border: 2px solid #333; /* Borde sencillo */
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-/* Efecto de hover en los botones de navegación */
-.react-calendar__navigation button:hover {
-    background-color: #333;
-    color: white; /* Texto blanco al pasar el ratón */
-}
-
-/* Ajustes para la cabecera del calendario */
-.react-calendar__header {
-    font-size: 20px !important;
-    font-family: 'Press Start 2P', cursive;
-    text-align: center;
-    padding: 10px;
-    display: flex;
-    justify-content: center; /* Centra el título */
-    align-items: center; /* Alinea verticalmente el título */
-    width: 100%; /* Asegura que el contenedor tenga todo el ancho disponible */
-    background-color: #333; /* Fondo oscuro en la cabecera */
-    color: white; /* Texto blanco */
-    border-radius: 10px 10px 0 0; /* Bordes redondeados en la parte superior */
-}
-
-/* Ajuste del estilo cuando el día es seleccionado */
-.react-calendar__tile--active {
-    background: #333 !important;
-    color: white !important;
-    border-radius: 6px;
+    background-color: #ddd; 
 }

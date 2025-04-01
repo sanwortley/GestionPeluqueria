@@ -1,6 +1,7 @@
-// src/components/Navbar.js
+
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';  // Importamos useLocation para obtener la ruta actual
+import './Navbar.css'
 
 const Navbar = () => {
   const location = useLocation();  // Obtiene la ruta actual
