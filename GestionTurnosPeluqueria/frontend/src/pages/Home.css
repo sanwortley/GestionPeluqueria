@@ -9,6 +9,15 @@ body {
     margin: 0;
     padding: 0;
 }
+.logo {
+    display: block;
+    margin: auto;
+    width: 80%; /* Ajuste de tamaño */
+    max-width: 250px; /* Tamaño máximo más reducido */
+    height: auto;
+    padding: 0;
+    margin-top: -20px; /* Ajusta el margen superior */
+}
 
 /* Estilo para el encabezado */
 h1 {
@@ -29,26 +38,25 @@ h1:hover {
     transform: scale(1.05);
     transition: all 0.3s ease;
 }
-h2{
+
+h2, h3 {
     font-family: 'Poppins', sans-serif !important;
     font-size: 18px !important;
     color: white;
 }
 
-h3{
-    font-family: 'Poppins', sans-serif !important;
-    font-size: 18px !important;
-    color: white;
-}
 /* Contenedor principal */
 .main-content {
     padding: 30px;
 }
 
-/* Calendario */
+/* Contenedor flexible para el calendario e imagen */
 .calendar-container {
     display: flex;
     justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
     margin: 20px 0;
 }
 
@@ -56,51 +64,43 @@ h3{
 .react-calendar {
     font-family: 'Poppins', sans-serif !important;
     font-size: 18px !important;
-
     width: 100%;
-    max-width: 1000px; /* Ajusta según el diseño deseado */
+    max-width: 800px;
     background: #222;
     border: 2px solid #fff;
     border-radius: 10px;
     padding: 20px;
-    margin-top: -150px; /* Reduce el espacio superior */
+    margin-top: -50px;
 }
 
-/* Estilos para los días deshabilitados en el calendario */
+/* Estilos para días deshabilitados en el calendario */
 .react-calendar__tile:disabled {
-    font-family: 'Poppins', sans-serif !important;
-    font-size: 18px !important;
-    background-color: #333 !important; /* Un gris oscuro */
-    color: #777 !important; /* Un gris más claro para el texto */
-    opacity: 1; /* Asegura que se vea bien */
+    background-color: #333 !important;
+    color: #777 !important;
+    opacity: 1;
 }
 .react-calendar__tile:hover {
-    background: #555 !important; /* Un gris más claro para que se note */
+    background: #555 !important;
     color: #fff !important;
     transition: background 0.3s ease;
 }
 
-
-
 .react-calendar__navigation button {
-    font-family: 'Poppins', sans-serif !important;
-    font-size: 18px !important;
-    background: none !important; /* Quita el fondo blanco */
-    border: 2px solid #222 !important; /* Contorno del mismo color que el fondo */
-    color: white !important; /* Color del ícono */
-    padding: 10px; /* Ajuste de tamaño */
-    border-radius: 5px; /* Bordes redondeados */
+    background: none !important;
+    border: 2px solid #222 !important;
+    color: white !important;
+    padding: 10px;
+    border-radius: 5px;
 }
-
 .react-calendar__navigation button:hover {
-    border-color: #444 !important; /* Un tono más claro al pasar el mouse */
-    background: rgba(255, 255, 255, 0.1) !important; /* Efecto sutil */
+    border-color: #444 !important;
+    background: rgba(255, 255, 255, 0.1) !important;
 }
 
 /* Días seleccionados o resaltados */
 .react-calendar__tile--active {
     background: #4caf50;
-    color: black    ;
+    color: black;
     font-weight: bold;
 }
 
@@ -110,18 +110,15 @@ h3{
     font-weight: bold;
 }
 
-
 .react-calendar__tile--now:hover {
-    background: #8d7674a8 !important; /* Un tono más claro al pasar el mouse */
+    background: #8d7674a8 !important;
 }
-
 
 /* Estilos para diferenciar los días */
 .fin-de-semana {
     color: #f44336 !important;
     font-weight: bold;
 }
-
 .dia-laborable {
     color: white !important;
 }
@@ -138,17 +135,17 @@ h3{
     justify-content: center;
     align-items: center;
 }
-.disponibilidad-modal input{
-    width: 100%; /* O puedes usar un tamaño fijo, ej: 300px */
-    height: 40px; /* Ajusta la altura */
-    font-size: 16px; /* Ajusta el tamaño del texto */
-    padding: 8px; /* Espaciado interno */
-    border-radius: 5px; /* Bordes redondeados */
-    border: 1px solid #ccc; /* Borde sutil */
-    box-sizing: border-box; /* Evita que el padding afecte el tamaño total */
+.disponibilidad-modal input {
+    width: 100%;
+    height: 40px;
+    font-size: 16px;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
 }
 .disponibilidad-modal {
-    position: relative; /* Agregado */
+    position: relative;
     background: #222;
     padding: 30px;
     border-radius: 10px;
@@ -157,6 +154,29 @@ h3{
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
 }
 
+.modal-confirmacion {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: #222;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+}
 
 /* Botón de cierre */
 .close-button {
@@ -170,184 +190,81 @@ h3{
     cursor: pointer;
     transition: color 0.3s ease;
 }
-
 .close-button:hover {
     color: #f44336;
 }
 
-/* Horarios */
-.horarios-container {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    margin: 15px 0;
-}
-
-.horario-button {
-    padding: 10px 15px;
-    border: 1px solid #fff;
-    background-color: #222;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.horario-button:hover {
-    background-color: #444;
-}
-
-.horario-button.seleccionado {
-    background-color: #4caf50;
-    font-weight: bold;
-}
-
-.horario-button.deshabilitado {
-    background-color: #555;
-    cursor: not-allowed;
-    color: #88888874;
-}
-
 /* Formulario de reserva */
-.turno-form input,
-.turno-form select {
-    width: 90%;
-    padding: 10px;
-    border: 2px solid #fff;
-    border-radius: 5px;
-    background-color: #222;
-    color: white;
-}
-
-/* Botón de reserva */
-.turno-form button {
-    background-color: #fff;
-    color: #111;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    text-transform: uppercase;
-    transition: background-color 0.3s ease;
-}
-
-.turno-form button:hover {
-    background-color: #ccc;
-}
-
-/* Mensaje de éxito */
-.mensaje-exito {
-    background-color: #4caf50;
-    color: white;
-    padding: 10px;
-    border-radius: 5px;
-}
-
-/* Ventana emergente de confirmación */
-.modal-confirmacion {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+.turno-form {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
+    gap: 15px; /* Mayor separación entre los elementos */
+    margin-top: 20px;
 }
-
-.modal-content {
-    background: #222;
-    color: white;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    width: 300px;
-}
-
-/* Botones en la ventana emergente */
-.modal-content button {
-    margin: 10px;
-    padding: 10px 15px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    text-transform: uppercase;
-}
-
-.modal-content button:first-of-type {
-    background-color: #4caf50;
-    color: white;
-}
-
-.modal-content h2{
-    font-family: 'Poppins', sans-serif !important;
-    font-size: 18px !important;
-}
-
-.modal-content button:last-of-type {
-    background-color: #f44336;
-    color: white;
-}
-
-.modal-content button:hover {
-    opacity: 0.8;
-}
-
-.modal-especial-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .modal-especial-content {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .modal-especial-content p {
-    font-size: 18px;
-    color: #333;
-  }
-  
-  .modal-especial-content button {
-    margin-top: 10px;
-    padding: 10px 20px;
-    background: red;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-  }
-  
-/* Botones input*/
 
 .turno-form input,
 .turno-form select,
 .turno-form button {
-  width: 100%;  
-  padding: 10px;  
-  margin-bottom: 15px;  
-  border: 1px solid #ccc;  
-  border-radius: 5px;  
-  font-size: 16px;  
+    width: 100%;
+    max-width: 400px;
+    padding: 12px;
+    border-radius: 8px;
+    border: 2px solid #fff;
+    background-color: #222;
+    color: white;
+    font-size: 16px;
+    transition: all 0.3s ease;
 }
 
-.logo {
-    display: block;
-    margin: auto;
-    width: 500px; /* Ajusta el tamaño según necesites */
-    height: auto;
-    padding: 0;
-    margin-top: -160px;
+.turno-form select {
+    cursor: pointer;
+    appearance: none;
+    outline: none;
+}
 
-  }
-  
+.turno-form button {
+    background-color: #4caf50;
+    border: none;
+    text-transform: uppercase;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.turno-form button:hover {
+    background-color: #45a049;
+}
+
+/* Estilos para los botones de horarios */
+.horario-button {
+    background-color: #515151;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 5px;
+}
+.horario-button.seleccionado {
+    background-color: #4caf50 !important;
+    color: black !important;
+    font-weight: bold;
+}
+
+.horario-button:hover {
+    background-color: #686868;
+}
+
+.modal-content button{
+    background-color: #515151;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 5px;
+}

@@ -5,10 +5,11 @@ body.dashboard-page {
   background-attachment: fixed;
   margin: 0;
   padding: 0;
-  height: 100vh;
-  width: 100vw;
+  min-height: 100vh;
+  width: 100%;
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 
 /* Contenedor del Dashboard */
@@ -20,29 +21,29 @@ body.dashboard-page {
   flex-direction: column;
   align-items: center;
   width: 100%;
-  height: 100vh;  /* Ocupa toda la pantalla */
-  overflow: hidden;
+  min-height: 100vh; /* Asegura que siempre ocupe toda la pantalla */
   padding-bottom: 20px;
+  overflow-x: hidden;
 }
 
 /* Imagen arriba del Dashboard */
 .dashboard-logo {
   width: 200px;
+  max-width: 50%; /* Para evitar que sea muy grande en móviles */
   margin-top: 20px;
   margin-bottom: 20px;
 }
 
 /* Contenedor de la tabla con scroll */
 .turnos-container {
-  width: 90vw;
+  width: 90%;
   max-width: 1200px;
   flex-grow: 1;
   overflow-y: auto;
-  overflow-x: hidden;
   background: rgba(0, 0, 0, 0.6);
   border-radius: 10px;
   padding: 10px;
-  max-height: calc(100vh - 160px); /* Ajuste para que no se corte el final */
+  max-height: calc(100vh - 160px); /* Ajuste para evitar cortes */
 }
 
 /* Tabla */
@@ -55,9 +56,9 @@ body.dashboard-page {
 
 /* Estilos de las celdas */
 .turnos-table th, .turnos-table td {
-  padding: 15px;
+  padding: 12px; /* Ajuste menor para mejor adaptación */
   text-align: left;
-  font-size: 16px;
+  font-size: 14px; /* Se reduce en pantallas más pequeñas */
 }
 
 .turnos-table th {
@@ -76,11 +77,13 @@ body.dashboard-page {
 .turnos-table tr:hover td {
   background-color: #2a2a2a;
 }
+
+/* Botón de eliminar */
 .delete-button {
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 20px;
+  font-size: 18px;
   color: red;
   transition: transform 0.2s ease, color 0.2s ease;
 }
@@ -88,4 +91,51 @@ body.dashboard-page {
 .delete-button:hover {
   transform: scale(1.2);
   color: #ff4d4d;
+}
+
+/* Estilos del modal */
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 400px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+  .dashboard-logo {
+    width: 150px; /* Reduce el tamaño en móviles */
+  }
+
+  .turnos-container {
+    width: 95%; /* Más espacio en pantallas pequeñas */
+    max-height: none; /* Evita cortes */
+  }
+
+  .turnos-table th, .turnos-table td {
+    padding: 10px;
+    font-size: 12px; /* Se adapta mejor en móviles */
+  }
+
+  .delete-button {
+    font-size: 16px; /* Ajuste menor */
+  }
+
+  /* Asegura que el modal esté bien centrado */
+  .modal {
+    width: 95%;
+    max-width: 350px;
+    padding: 15px;
+  }
 }
