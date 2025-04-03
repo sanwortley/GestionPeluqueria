@@ -1,82 +1,91 @@
-/* src/pages/Login.css */
-
-/* Estilo global para el fondo */
-body {
-  background-color: #f8f9fa;  /* Fondo suave */
-  font-family: 'Helvetica Neue', Arial, sans-serif;
+/* Aplicar fondo SOLO al Dashboard */
+body.dashboard-page {
+  background-color: #000000;
+  background-size: cover;
+  background-attachment: fixed;
   margin: 0;
   padding: 0;
-}
-
-/* Contenedor principal del login */
-.login-container {
+  height: 100vh;
+  width: 100vw;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh; /* Asegura que ocupe todo el alto de la pantalla */
-  padding: 0 20px;
+  flex-direction: column;
+}
+
+/* Contenedor del Dashboard */
+.dashboard-container {
+  font-family: 'Poppins', sans-serif;
+  color: #fff;
   text-align: center;
-}
-
-/* Contenedor de tarjeta de login */
-.card {
-  background-color: #fff;
-  border-radius: 8px;
-  padding: 40px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
-  max-width: 400px;
+  height: 100vh;  /* Ocupa toda la pantalla */
+  overflow: hidden;
+  padding-bottom: 20px;
 }
 
-/* Título del login */
-h2 {
-  color: #333;
-  font-size: 2rem;
+/* Imagen arriba del Dashboard */
+.dashboard-logo {
+  width: 200px;
+  margin-top: 20px;
   margin-bottom: 20px;
 }
 
-/* Estilo de los labels */
-label {
-  font-size: 1rem;
-  color: #333;
-  margin-bottom: 10px;
-  text-align: left;
-  width: 100%;
-}
-
-/* Estilo de los inputs */
-input {
+/* Contenedor de la tabla con scroll */
+.turnos-container {
+  width: 90vw;
+  max-width: 1200px;
+  flex-grow: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 10px;
   padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  max-height: calc(100vh - 160px); /* Ajuste para que no se corte el final */
+}
+
+/* Tabla */
+.turnos-table {
   width: 100%;
-  font-size: 1rem;
-  margin-bottom: 15px;
-  box-sizing: border-box;
-  background-color: #f8f9fa;
-  transition: border 0.3s ease;
+  border-collapse: collapse;
+  background-color: #222;
+  border-radius: 10px;
 }
 
-input:focus {
-  border-color: #007bff;
-  outline: none;
-  background-color: #fff;
+/* Estilos de las celdas */
+.turnos-table th, .turnos-table td {
+  padding: 15px;
+  text-align: left;
+  font-size: 16px;
 }
 
-/* Estilo del botón */
-button {
-  background-color: #007bff;
+.turnos-table th {
+  background-color: #333;
+  font-weight: 600;
   color: #fff;
-  border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  width: 100%;
-  max-width: 250px;
+  text-transform: uppercase;
 }
 
-button:hover {
-  background-color: #0056b3;
+.turnos-table td {
+  background-color: #1a1a1a;
+  border-bottom: 1px solid #444;
+  color: #ddd;
+}
+
+.turnos-table tr:hover td {
+  background-color: #2a2a2a;
+}
+.delete-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  color: red;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.delete-button:hover {
+  transform: scale(1.2);
+  color: #ff4d4d;
 }

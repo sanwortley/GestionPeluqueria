@@ -1,17 +1,19 @@
-/* src/components/Navbar.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
 
-/* Estilos generales de la NavBar */
 .navbar {
-  background-color: #333; /* Color de fondo de la NavBar */
-  padding: 10px 20px;
-  position: sticky;
+  position: fixed; /* Fija la Navbar */
   top: 0;
   left: 0;
-  right: 0;
+  width: 100%;
+  background-color: #333; /* Fondo oscuro */
+  padding: 15px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   z-index: 1000;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Sombra sutil */
 }
 
-/* Lista de enlaces de la Navbar */
 .navbar-list {
   list-style: none;
   display: flex;
@@ -20,12 +22,10 @@
   padding: 0;
 }
 
-/* Item de la lista de enlaces */
 .navbar-item {
-  margin: 0 15px;
+  margin: 0 20px;
 }
 
-/* Enlace de la Navbar */
 .navbar-link {
   color: white;
   text-decoration: none;
@@ -35,9 +35,14 @@
 }
 
 .navbar-link:hover {
-  color: #f8f9fa;
+  color: #007bff; /* Color al pasar el mouse */
 }
 
 .navbar-link.active {
-  color: #007bff;
+  color: #9c9a94; /* Color cuando la página está activa */
+}
+
+/* Evitar que el contenido se superponga con la Navbar */
+body {
+  padding-top: 60px; /* Ajustar según la altura de la Navbar */
 }

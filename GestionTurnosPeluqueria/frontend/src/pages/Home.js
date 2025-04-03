@@ -3,13 +3,15 @@ import { getTurnos, createTurno } from '../services/turnoService';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css'; // Importa los estilos
 import './Home.css'; // Importa los estilos de la página
+//import logo from '../public/romacabellobyn.png  '; // Importa el logo de la aplicación
 
 const Home = () => {
   const [turnos, setTurnos] = useState([]);
   const [fechaSeleccionada, setFechaSeleccionada] = useState('');
   const [horariosDisponibles, setHorariosDisponibles] = useState([]);
-  const [horarioSeleccionado, setHorarioSeleccionado] = useState('');
+  const [horarioSeleccionado, setHorarioSeleccionado] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [modalEspecialVisible, setModalEspecialVisible] = useState(false);
   const [cliente, setCliente] = useState('');
   const [servicio, setServicio] = useState('');
   const [mensajeExito, setMensajeExito] = useState('');
@@ -24,85 +26,120 @@ const Home = () => {
   };
 
   useEffect(() => {
-    const fetchTurnos = async () => {
-      try {
-        const data = await getTurnos();
-        if (Array.isArray(data)) {
-          setTurnos(data);
-        } else {
-          console.error('Los datos de turnos no son un arreglo:', data);
+    if (fechaSeleccionada) {
+      const fetchTurnos = async () => {
+        try {
+          const data = await getTurnos();
+          console.log("Turnos obtenidos:", data); // 🔹 Verifica en consola
+  
+          if (Array.isArray(data)) {
+            setTurnos(data);
+          } else {
+            console.error('Los datos de turnos no son un arreglo:', data);
+            setTurnos([]);
+          }
+        } catch (error) {
+          console.error('Error al obtener los turnos:', error);
           setTurnos([]);
         }
-      } catch (error) {
-        console.error('Error al obtener los turnos:', error);
-        setTurnos([]);
-      }
-    };
-    fetchTurnos();
+      };
+      fetchTurnos();
+    }
   }, [fechaSeleccionada]);
 
   const handleDateChange = (newDate) => {
-    const nuevaFecha = newDate.toISOString().split('T')[0];
+    const nuevaFecha = newDate.toISOString().split('T')[0]; 
     setFechaSeleccionada(nuevaFecha);
+  
+    const fechaSeleccionadaDate = new Date(Date.UTC(newDate.getFullYear(), newDate.getMonth(), newDate.getDate()));
+    const diaSeleccionado = fechaSeleccionadaDate.getUTCDay();
+  
+    console.log("📆 Fecha seleccionada:", nuevaFecha, "Día (getUTCDay()):", diaSeleccionado);
+  
+    if (diaSeleccionado === 0 || diaSeleccionado === 6) {
+      console.log("🛑 Es fin de semana, mostrando modal especial...");
+      setModalEspecialVisible(true);
+      setModalVisible(false);  
+      console.log("Estado modal especial después de set:", modalEspecialVisible);
+      return;  
+    }
+  
+    setModalEspecialVisible(false);
     setModalVisible(true);
     actualizarHorariosDisponibles(nuevaFecha);
   };
+  
+  
 
   const actualizarHorariosDisponibles = (fechaSeleccionada) => {
     const horarios = [];
-    const turnosDelDia = (turnos || []).filter(t => t.fecha === fechaSeleccionada).map(t => t.hora); // Filtra los turnos del día seleccionado
-    const ahora = new Date(); // Hora actual
-    let hora = 10; // Empezamos a las 10 de la mañana
-    let minutos = 0;
+    const turnosDelDia = (turnos || []).filter(t => t.fecha === fechaSeleccionada).map(t => t.hora);
+    const ahora = new Date();
+    const fechaSeleccionadaDate = new Date(fechaSeleccionada + "T00:00:00"); // 🔹 Convertir a Date
     
-    // Horarios de la mañana de 10:00 a 13:00
+    let hora = 10;
+    let minutos = 0;
+  
     while (hora < 13) {
       const horaStr = `${hora.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}`;
-      const horaSeleccionada = new Date(fechaSeleccionada);
-      horaSeleccionada.setHours(hora);
-      horaSeleccionada.setMinutes(minutos);
+      const horaSeleccionada = new Date(fechaSeleccionadaDate);
+      horaSeleccionada.setHours(hora, minutos, 0, 0);  
   
-      // Verifica que el horario no haya pasado y no esté reservado
-      if (horaSeleccionada > ahora && !turnosDelDia.includes(horaStr)) {
+      // ✅ Corrección: Si la fecha es hoy, comparar solo la hora
+      if (
+        (fechaSeleccionadaDate.getTime() !== ahora.setHours(0, 0, 0, 0) || horaSeleccionada.getTime() > ahora.getTime()) &&
+        !turnosDelDia.includes(horaStr)
+      ) {
         horarios.push(horaStr);
       }
   
-      minutos += 45;  // Se suman 45 minutos después de cada turno
+      minutos += 45;
       if (minutos >= 60) {
-        minutos -= 60;  // Restamos 60 minutos si sobrepasa una hora
-        hora++;  // Aumentamos la hora en 1
+        minutos -= 60;
+        hora++;
       }
     }
   
-    // Horarios de la tarde/noche de 15:00 a 21:00
-    hora = 15; // Empezamos a las 15:00
-    minutos = 0; // Reiniciamos los minutos para la tarde
+    hora = 15;
+    minutos = 0;
     while (hora < 21) {
       const horaStr = `${hora.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}`;
-      const horaSeleccionada = new Date(fechaSeleccionada);
-      horaSeleccionada.setHours(hora);
-      horaSeleccionada.setMinutes(minutos);
+      const horaSeleccionada = new Date(fechaSeleccionadaDate);
+      horaSeleccionada.setHours(hora, minutos, 0, 0);
   
-      // Verifica que el horario no haya pasado y no esté reservado
-      if (horaSeleccionada > ahora && !turnosDelDia.includes(horaStr)) {
+      if (
+        (fechaSeleccionadaDate.getTime() !== ahora.setHours(0, 0, 0, 0) || horaSeleccionada.getTime() > ahora.getTime()) &&
+        !turnosDelDia.includes(horaStr)
+      ) {
         horarios.push(horaStr);
       }
   
-      minutos += 45;  // Se suman 45 minutos después de cada turno
+      minutos += 45;
       if (minutos >= 60) {
-        minutos -= 60;  // Restamos 60 minutos si sobrepasa una hora
-        hora++;  // Aumentamos la hora en 1
+        minutos -= 60;
+        hora++;
       }
     }
   
-    setHorariosDisponibles(horarios); // Actualiza el estado con los horarios disponibles
+    setHorariosDisponibles(horarios);
   };
 
   const handleHorarioClick = (hora) => {
-    setHorarioSeleccionado(hora);
-    setConfirmacionVisible(true); // Mostrar la ventana de confirmación
+    setHorarioSeleccionado(hora); // Actualiza el estado con el horario seleccionado
   };
-
+  
+  
+  
+  
+  const handleReservarClick = () => {
+    if (esFormularioValido()) {
+      setConfirmacionVisible(true);
+    } else {
+      alert("Por favor, completa todos los campos antes de continuar.");
+    }
+  };
+  
+  
   const confirmarTurno = async () => {
     if (!horarioSeleccionado || !cliente || !servicio) return;
   
@@ -152,92 +189,116 @@ const Home = () => {
     return 'dia-laborable';
   };
 
-  // Validación para habilitar el botón de confirmar turno
   const esFormularioValido = () => {
-    return cliente !== '' && servicio !== '' && horarioSeleccionado !== '';
+    return cliente.trim() !== "" && servicio.trim() !== "" && horarioSeleccionado;
   };
+  
 
   return (
     <div className="main-content">
-      <h1>Roma Cabello</h1>
-  
-      {/* Calendario */}
-      <div className="calendar-container">
-        <Calendar
-          onChange={handleDateChange}
-          value={hoy}
-          view="month"
-          minDate={hoy}  // Fecha mínima es la actual
-          maxDate={semanaSiguiente}  // Fecha máxima es 13 días después
-          tileClassName={tileClassName}  // Asignamos el estilo a los días del calendario
-        />
+  {/* Imagen en lugar del título */}
+  <img src="/romacabellonyb.png" alt="Roma Cabello" className="logo" />
+
+  {/* Calendario */}
+  <div className="calendar-container">
+    <Calendar
+      onChange={handleDateChange}
+      value={hoy}
+      view="month"
+      minDate={hoy}  
+      maxDate={semanaSiguiente}  
+      tileClassName={tileClassName}  
+    />
+  </div>
+
+  {/* Modal con el formulario para crear un turno */}
+  {modalVisible && fechaSeleccionada && (
+    <div className="disponibilidad-overlay">
+      <div className="disponibilidad-modal">
+        <h2>Turno para {fechaSeleccionada}</h2>
+        <button className="close-button" onClick={() => setModalVisible(false)}>×</button>
+
+        <div className="horarios-container">
+          {horariosDisponibles.length > 0 ? (
+            horariosDisponibles.map((hora) => (
+              <button
+                key={hora}
+                className={`horario-button ${horarioSeleccionado === hora ? "seleccionado" : ""}`}
+                onClick={() => handleHorarioClick(hora)}
+              >
+                {hora}
+              </button>
+            ))
+          ) : (
+            <p>No hay horarios disponibles</p>
+          )}
+        </div>
+
+        {/* Mostrar formulario solo si se seleccionó un horario */}
+        {horarioSeleccionado && (
+          <form className="turno-form">
+            <input 
+              type="text" 
+              placeholder="Nombre del Cliente" 
+              value={cliente} 
+              onChange={(e) => setCliente(e.target.value)} 
+              required 
+            />
+
+            <select 
+              value={servicio} 
+              onChange={(e) => setServicio(e.target.value)} 
+              required
+            >
+              <option value="">Seleccionar Servicio</option>
+              <option value="Corte de Pelo">Corte de Pelo</option>
+            </select>
+
+            <button 
+              type="button" 
+              onClick={handleReservarClick} 
+              disabled={!esFormularioValido()} 
+            >
+              Reservar
+            </button>
+          </form>
+        )}
+
+        {mensajeExito && <div className="mensaje-exito">{mensajeExito}</div>}
       </div>
-  
-      {/* Modal con el formulario para crear un turno */}
-      {modalVisible && (
-        <div className="disponibilidad-overlay">
-          <div className="disponibilidad-modal">
-            <h2>Crear Turno para {fechaSeleccionada}</h2>
-            <button className="close-button" onClick={() => setModalVisible(false)}>X</button>
-            
-            <div className="horarios-container">
-              {horariosDisponibles.length > 0 ? (
-                horariosDisponibles.map((hora) => (
-                  <button key={hora} className="horario-button" onClick={() => handleHorarioClick(hora)}>
-                    {hora}
-                  </button>
-                ))
-              ) : (
-                <p>No hay horarios disponibles</p>
-              )}
-            </div>
-  
-            {horarioSeleccionado && (
-              <form className="turno-form">
-                <input 
-                  type="text" 
-                  placeholder="Nombre del Cliente" 
-                  value={cliente} 
-                  onChange={(e) => setCliente(e.target.value)} 
-                  required 
-                />
-                
-                <select value={servicio} onChange={(e) => setServicio(e.target.value)} required>
-                  <option value="">Seleccionar Servicio</option>
-                  <option value="Corte de Pelo">Corte de Pelo</option>
-                </select>
-                
-                <button 
-                  type="button" 
-                  onClick={() => setConfirmacionVisible(true)} 
-                  disabled={!esFormularioValido()} // Deshabilitar si no está todo completo
-                >
-                  Confirmar Turno
-                </button>
-              </form>
-            )}
-  
-            {mensajeExito && <div className="mensaje-exito">{mensajeExito}</div>}
-          </div>
-        </div>
-      )}
-  
-      {/* Ventana emergente de confirmación */}
-      {confirmacionVisible && (
-        <div className="modal-confirmacion">
-          <div className="modal-content">
-            <h3>¿Confirmar el turno?</h3>
-            <p>Cliente: {cliente}</p>
-            <p>Fecha: {fechaSeleccionada}</p>
-            <p>Hora: {horarioSeleccionado}</p>
-            <p>Servicio: {servicio}</p>
-            <button onClick={confirmarTurno}>Confirmar</button>
-            <button onClick={cancelarConfirmacion}>Cancelar</button>
-          </div>
-        </div>
-      )}
     </div>
+  )}
+
+  {/* Modal especial para sábados y domingos (🚨 MOVIDO AQUÍ 🚨) */}
+  {modalEspecialVisible && (
+    <div className="modal-especial-overlay">
+      <div className="modal-especial-content">
+        <p>⚠️ Sábados y domingos son para turnos especiales.</p>
+        <p>📞 Comunicate con +54 9 351 542 7973</p>
+        <button onClick={() => setModalEspecialVisible(false)}>Cerrar</button>
+      </div>
+    </div>
+  )}
+
+  {/* Ventana emergente de confirmación */}
+  {confirmacionVisible && (
+    <div className="modal-confirmacion">
+      <div className="modal-content">
+        <h3>¿Confirmar el turno?</h3>
+        <p>Cliente: {cliente}</p>
+        <p>Fecha: {fechaSeleccionada}</p>
+        <p>Hora: {horarioSeleccionado}</p>
+        <p>Servicio: {servicio}</p>
+        <button onClick={confirmarTurno}>Confirmar</button>
+        <button onClick={cancelarConfirmacion}>Cancelar</button>
+      </div>
+    </div>
+  )}
+</div>
+
   );
+  
+  
 };
 
 export default Home;

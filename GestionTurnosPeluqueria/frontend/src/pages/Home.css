@@ -1,35 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
 /* Estilo general */
-
-/* Estilo para el encabezado h1 con estilo de barrio minimalista */
-h1 {
-    font-family: 'Press Start 2P', cursive; /* Fuente retro y pixelada */
-    font-size: 36px; /* Tamaño de fuente grande pero no excesivo */
-    font-weight: 400; /* Peso normal de la fuente */
-    color: #fff; /* Color blanco para resaltar */
-    text-align: center; /* Centrado del título */
-    text-transform: none; /* Mantener las letras en minúsculas */
-    margin: 20px 0; /* Margen para que no quede pegado a los otros elementos */
-    letter-spacing: 2px; /* Un pequeño espaciado entre las letras para dar un toque urbano */
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Sombra sutil para dar profundidad */
-}
-
-/* Estilo cuando el h1 está en hover */
-h1:hover {
-    color: #4CAF50; /* Cambiar color a verde al pasar el ratón */
-    transform: scale(1.05); /* Agrandar ligeramente al pasar el ratón */
-    transition: all 0.3s ease; /* Transición suave */
-}
-
-/* Estilo cuando el h1 está activo (al hacer click) */
-h1:active {
-    transform: scale(0.98); /* Efecto de pulsación */
-}
-
-.main-content {
-    font-family: 'Arial', sans-serif;
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #3f3f3f;
+    color: #fff;
     text-align: center;
-    background-color: #f4f4f4;
-    padding: 20px;
+    margin: 0;
+    padding: 0;
+}
+
+/* Estilo para el encabezado */
+h1 {
+    font-size: 36px;
+    font-weight: 600;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin: 20px 0;
+    border-bottom: 2px solid #fff;
+    display: inline-block;
+    padding-bottom: 5px;
+}
+
+/* Efecto hover */
+h1:hover {
+    color: #bbb;
+    transform: scale(1.05);
+    transition: all 0.3s ease;
+}
+h2{
+    font-family: 'Poppins', sans-serif !important;
+    font-size: 18px !important;
+    color: white;
+}
+
+h3{
+    font-family: 'Poppins', sans-serif !important;
+    font-size: 18px !important;
+    color: white;
+}
+/* Contenedor principal */
+.main-content {
+    padding: 30px;
 }
 
 /* Calendario */
@@ -39,14 +52,78 @@ h1:active {
     margin: 20px 0;
 }
 
-/* Colores para diferenciar días laborales y fines de semana */
+/* Ajustar tamaño del calendario */
+.react-calendar {
+    font-family: 'Poppins', sans-serif !important;
+    font-size: 18px !important;
+
+    width: 100%;
+    max-width: 1000px; /* Ajusta según el diseño deseado */
+    background: #222;
+    border: 2px solid #fff;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: -150px; /* Reduce el espacio superior */
+}
+
+/* Estilos para los días deshabilitados en el calendario */
+.react-calendar__tile:disabled {
+    font-family: 'Poppins', sans-serif !important;
+    font-size: 18px !important;
+    background-color: #333 !important; /* Un gris oscuro */
+    color: #777 !important; /* Un gris más claro para el texto */
+    opacity: 1; /* Asegura que se vea bien */
+}
+.react-calendar__tile:hover {
+    background: #555 !important; /* Un gris más claro para que se note */
+    color: #fff !important;
+    transition: background 0.3s ease;
+}
+
+
+
+.react-calendar__navigation button {
+    font-family: 'Poppins', sans-serif !important;
+    font-size: 18px !important;
+    background: none !important; /* Quita el fondo blanco */
+    border: 2px solid #222 !important; /* Contorno del mismo color que el fondo */
+    color: white !important; /* Color del ícono */
+    padding: 10px; /* Ajuste de tamaño */
+    border-radius: 5px; /* Bordes redondeados */
+}
+
+.react-calendar__navigation button:hover {
+    border-color: #444 !important; /* Un tono más claro al pasar el mouse */
+    background: rgba(255, 255, 255, 0.1) !important; /* Efecto sutil */
+}
+
+/* Días seleccionados o resaltados */
+.react-calendar__tile--active {
+    background: #4caf50;
+    color: black    ;
+    font-weight: bold;
+}
+
+.react-calendar__tile--now {
+    background: rgba(255, 0, 0, 0) !important;
+    color: rgba(255, 255, 255, 0) !important;
+    font-weight: bold;
+}
+
+
+.react-calendar__tile--now:hover {
+    background: #8d7674a8 !important; /* Un tono más claro al pasar el mouse */
+}
+
+
+/* Estilos para diferenciar los días */
 .fin-de-semana {
-    color: red !important;
+    color: #f44336 !important;
     font-weight: bold;
 }
 
 .dia-laborable {
-    color: black !important;
+    color: white !important;
 }
 
 /* Modal de disponibilidad */
@@ -61,112 +138,108 @@ h1:active {
     justify-content: center;
     align-items: center;
 }
-
+.disponibilidad-modal input{
+    width: 100%; /* O puedes usar un tamaño fijo, ej: 300px */
+    height: 40px; /* Ajusta la altura */
+    font-size: 16px; /* Ajusta el tamaño del texto */
+    padding: 8px; /* Espaciado interno */
+    border-radius: 5px; /* Bordes redondeados */
+    border: 1px solid #ccc; /* Borde sutil */
+    box-sizing: border-box; /* Evita que el padding afecte el tamaño total */
+}
 .disponibilidad-modal {
-    background: white;
+    position: relative; /* Agregado */
+    background: #222;
     padding: 30px;
     border-radius: 10px;
-    width: 500px; /* Modal más grande */
-    position: relative;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    width: 500px;
     text-align: center;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
 }
 
-/* Estilo para el botón de cerrar (la cruz) */
+
+/* Botón de cierre */
 .close-button {
     position: absolute;
-    top: 10px; /* Ajusta la distancia desde la parte superior */
-    right: 10px; /* Ajusta la distancia desde la parte derecha */
-    background: none; /* Elimina el fondo */
-    color: #333; /* Color oscuro para la cruz */
-    border: none; /* Elimina el borde */
-    font-size: 24px; /* Tamaño de la cruz más pequeño */
-    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
-    font-family: 'Press Start 2P', cursive; /* Fuente consistente con el estilo general */
-    transition: color 0.3s ease; /* Transición suave para el color */
+    top: 10px;
+    right: 10px;
+    background: none;
+    color: white;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    transition: color 0.3s ease;
 }
 
-/* Efecto hover para la cruz */
 .close-button:hover {
-    color: #d9534f; /* Cambia el color de la cruz a rojo al pasar el ratón */
-    transform: scale(1.1); /* Aumenta ligeramente el tamaño al pasar el ratón */
+    color: #f44336;
 }
 
-/* Horarios disponibles */
+/* Horarios */
 .horarios-container {
-    display: grid; /* Usar grid para organizar los horarios */
-    grid-template-columns: repeat(4, 1fr); /* 4 columnas */
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
     gap: 10px;
     margin: 15px 0;
 }
 
-/* Estilo de los botones de horario */
 .horario-button {
-    background-color: #333; /* Fondo oscuro */
-    color: white; /* Texto blanco */
-    border: 2px solid #333; /* Borde oscuro */
-    padding: 8px 12px; /* Relleno reducido */
-    border-radius: 6px; /* Bordes redondeados */
+    padding: 10px 15px;
+    border: 1px solid #fff;
+    background-color: #222;
+    color: white;
     cursor: pointer;
-    font-family: 'Press Start 2P', cursive; /* Fuente estilo barrio */
-    transition: background-color 0.3s, transform 0.3s ease; /* Transiciones suaves */
-    text-transform: uppercase; /* Letras en mayúsculas */
-    font-size: 12px; /* Fuente más pequeña */
+    transition: background-color 0.3s ease;
 }
 
-/* Efecto hover para el botón de horario */
 .horario-button:hover {
-    background-color: #444; /* Fondo más oscuro al pasar el ratón */
-    transform: scale(1.05); /* Efecto de agrandamiento */
+    background-color: #444;
 }
 
-/* Estilo para los inputs y selects del formulario de reserva */
+.horario-button.seleccionado {
+    background-color: #4caf50;
+    font-weight: bold;
+}
+
+.horario-button.deshabilitado {
+    background-color: #555;
+    cursor: not-allowed;
+    color: #88888874;
+}
+
+/* Formulario de reserva */
 .turno-form input,
 .turno-form select {
     width: 90%;
     padding: 10px;
-    margin: 10px 0;
-    border: 2px solid #ccc; /* Borde sencillo */
-    border-radius: 5px; /* Bordes redondeados */
-    font-family: 'Press Start 2P', cursive; /* Fuente urbana */
-    background-color: #f4f4f4; /* Fondo claro */
-    color: #333; /* Texto oscuro */
+    border: 2px solid #fff;
+    border-radius: 5px;
+    background-color: #222;
+    color: white;
 }
 
-/* Estilo del botón en el formulario de reserva */
+/* Botón de reserva */
 .turno-form button {
-    background-color: #333; /* Fondo oscuro */
-    color: white; /* Texto blanco */
+    background-color: #fff;
+    color: #111;
     padding: 10px 15px;
-    border: 2px solid #333; /* Borde oscuro */
+    border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-family: 'Press Start 2P', cursive; /* Fuente estilo barrio */
-    transition: background-color 0.3s, transform 0.3s ease; /* Transiciones suaves */
-    text-transform: uppercase; /* Letras en mayúsculas */
+    text-transform: uppercase;
+    transition: background-color 0.3s ease;
 }
 
-/* Estilo cuando el botón está deshabilitado */
-.turno-form button:disabled {
-    background-color: #888; /* Fondo gris para botón deshabilitado */
-    cursor: not-allowed; /* Cursor de no permitido */
-}
-
-/* Efecto hover para el botón de formulario */
 .turno-form button:hover {
-    background-color: #555; /* Fondo más oscuro al pasar el ratón */
-    transform: scale(1.05); /* Efecto de agrandamiento */
+    background-color: #ccc;
 }
 
 /* Mensaje de éxito */
 .mensaje-exito {
-    background-color: #d4edda; /* Fondo verde claro */
-    color: #155724; /* Texto verde oscuro */
+    background-color: #4caf50;
+    color: white;
     padding: 10px;
-    margin-top: 10px;
     border-radius: 5px;
-    font-weight: bold;
-    font-family: 'Press Start 2P', cursive; /* Fuente estilo barrio */
 }
 
 /* Ventana emergente de confirmación */
@@ -182,82 +255,99 @@ h1:active {
     align-items: center;
 }
 
-/* Contenido de la ventana emergente */
 .modal-content {
-    background: #333; /* Fondo oscuro */
-    color: white; /* Texto blanco */
+    background: #222;
+    color: white;
     padding: 20px;
     border-radius: 10px;
     text-align: center;
     width: 300px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    font-family: 'Press Start 2P', cursive; /* Fuente estilo barrio */
 }
 
-/* Estilo de los botones en la ventana emergente */
+/* Botones en la ventana emergente */
 .modal-content button {
     margin: 10px;
     padding: 10px 15px;
     border: none;
     cursor: pointer;
     border-radius: 5px;
-    font-family: 'Press Start 2P', cursive;
-    text-transform: uppercase; /* Letras en mayúsculas */
+    text-transform: uppercase;
 }
 
-/* Botón de confirmar en la ventana emergente */
 .modal-content button:first-of-type {
-    background-color: #007bff; /* Fondo azul */
+    background-color: #4caf50;
     color: white;
-    border: 2px solid #007bff; /* Borde azul */
 }
 
-/* Botón de cancelar en la ventana emergente */
+.modal-content h2{
+    font-family: 'Poppins', sans-serif !important;
+    font-size: 18px !important;
+}
+
 .modal-content button:last-of-type {
-    background-color: #d9534f; /* Fondo rojo */
+    background-color: #f44336;
     color: white;
-    border: 2px solid #d9534f; /* Borde rojo */
 }
 
-/* Efecto hover para los botones de la ventana emergente */
 .modal-content button:hover {
     opacity: 0.8;
-    transform: scale(1.05); /* Efecto de agrandamiento */
 }
 
-/* Aumentar el tamaño del calendario, pero hacerlo más estrecho */
-/* Fuente personalizada para hacer la letra más bonita */
-/* Fuente simple y urbana */
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap'); /* Fuente pixelada que recuerda a un estilo más urbano y sencillo */
-
-/* Contenedor del calendario centrado */
-.calendar-container {
+.modal-especial-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 20px 0;
-    padding: 10px;
-}
-
-/* Estilo para el calendario: forma rectangular y mayor tamaño */
-.react-calendar {
-    width: 85vw !important; /* 85% del ancho de la pantalla */
-    height: 60vh !important; /* 60% de la altura de la pantalla */
-    font-size: 18px;
-    font-family: 'Press Start 2P', cursive; /* Fuente pixelada y urbana */
-    background-color: #f0f0f0; /* Fondo gris claro */
-    border-radius: 10px; /* Bordes suaves */
-    box-shadow: none; /* Sin sombra */
-    transform: scale(1); /* Sin escalado */
-    overflow: visible;
-}
-
-/* Estilo para los días en el calendario */
-.react-calendar__tile {
-    padding: 12px 8px !important; /* Ajustar el padding de los días */
-    font-size: 18px !important;
-    font-family: 'Press Start 2P', cursive; /* Fuente pixelada para los días */
-    border-radius: 6px; /* Bordes redondeados */
+  }
+  
+  .modal-especial-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
     text-align: center;
-    background-color: #ddd; 
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .modal-especial-content p {
+    font-size: 18px;
+    color: #333;
+  }
+  
+  .modal-especial-content button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background: red;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+/* Botones input*/
+
+.turno-form input,
+.turno-form select,
+.turno-form button {
+  width: 100%;  
+  padding: 10px;  
+  margin-bottom: 15px;  
+  border: 1px solid #ccc;  
+  border-radius: 5px;  
+  font-size: 16px;  
 }
+
+.logo {
+    display: block;
+    margin: auto;
+    width: 500px; /* Ajusta el tamaño según necesites */
+    height: auto;
+    padding: 0;
+    margin-top: -160px;
+
+  }
+  

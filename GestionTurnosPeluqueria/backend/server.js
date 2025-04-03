@@ -166,6 +166,35 @@ app.get('/api/turnos', async (req, res) => {
       res.status(400).json({ error: error.message });
     }
   });
+
+
+app.delete('/api/turnos/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Convertir el ID a ObjectId de MongoDB
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+  
+      return res.status(400).json({ error: 'ID inválido' });
+    }
+
+    const resultado = await Turno.findByIdAndDelete(new mongoose.Types.ObjectId(id));
+
+    if (!resultado) {
+      
+      return res.status(404).json({ error: 'Turno no encontrado' });
+    }
+
+    res.json({ mensaje: 'Turno eliminado correctamente' });
+
+  } catch (error) {
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+});
+
+  
+  
+  
   
 
   // Configurar el puerto y escuchar
