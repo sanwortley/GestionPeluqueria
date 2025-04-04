@@ -1,0 +1,38 @@
+[
+  {
+    "dia": "Lunes",
+    "turnos": [
+      { "hora": "10:00", "habilitado": true },
+      { "hora": "10:45", "habilitado": true },
+      { "hora": "11:30", "habilitado": false },
+      { "hora": "12:15", "habilitado": true },
+      { "hora": "14:45", "habilitado": true },
+      { "hora": "15:30", "habilitado": false },
+      { "hora": "16:15", "habilitado": true },
+      { "hora": "17:00", "habilitado": true },
+      { "hora": "17:45", "habilitado": false },
+      { "hora": "18:30", "habilitado": true },
+      { "hora": "19:15", "habilitado": true },
+      { "hora": "20:00", "habilitado": false },
+      { "hora": "20:45", "habilitado": true }
+    ]
+  },
+  {
+    "dia": "Martes",
+    "turnos": [
+      { "hora": "10:00", "habilitado": false },
+      { "hora": "10:45", "habilitado": true },
+      { "hora": "11:30", "habilitado": true },
+      { "hora": "12:15", "habilitado": false },
+      { "hora": "14:45", "habilitado": true },
+      { "hora": "15:30", "habilitado": true },
+      { "hora": "16:15", "habilitado": false },
+      { "hora": "17:00", "habilitado": true },
+      { "hora": "17:45", "habilitado": true },
+      { "hora": "18:30", "habilitado": false },
+      { "hora": "19:15", "habilitado": true },
+      { "hora": "20:00", "habilitado": true },
+      { "hora": "20:45", "habilitado": true }
+    ]
+  }
+]

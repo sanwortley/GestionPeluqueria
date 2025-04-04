@@ -11,15 +11,15 @@ const Home = () => {
   const [horariosDisponibles, setHorariosDisponibles] = useState([]);
   const [horarioSeleccionado, setHorarioSeleccionado] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [modalEspecialVisible, setModalEspecialVisible] = useState(false);
   const [cliente, setCliente] = useState('');
   const [servicio, setServicio] = useState('');
   const [mensajeExito, setMensajeExito] = useState('');
   const [confirmacionVisible, setConfirmacionVisible] = useState(false);
+  const [horasDelDia, setHorasDelDia] = useState([]);
 
   const hoy = new Date();
   const semanaSiguiente = new Date();
-  semanaSiguiente.setDate(hoy.getDate() + 13);
+  semanaSiguiente.setDate(hoy.getDate() + 6);
 
   const cancelarConfirmacion = () => {
     setConfirmacionVisible(false);
@@ -47,6 +47,25 @@ const Home = () => {
     }
   }, [fechaSeleccionada]);
 
+  useEffect(() => {
+    const obtenerHorarios = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/horarios", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        const data = await response.json();
+        setHorasDelDia(data); // data debería ser un objeto tipo { lunes: [...], martes: [...], ... }
+      } catch (error) {
+        console.error("Error al obtener horarios desde el backend:", error);
+      }
+    };
+  
+    obtenerHorarios();
+  }, []);
+  
+
   const handleDateChange = (newDate) => {
     const nuevaFecha = newDate.toISOString().split('T')[0]; 
     setFechaSeleccionada(nuevaFecha);
@@ -56,15 +75,8 @@ const Home = () => {
   
     console.log("📆 Fecha seleccionada:", nuevaFecha, "Día (getUTCDay()):", diaSeleccionado);
   
-    if (diaSeleccionado === 0 || diaSeleccionado === 6) {
-      console.log("🛑 Es fin de semana, mostrando modal especial...");
-      setModalEspecialVisible(true);
-      setModalVisible(false);  
-      console.log("Estado modal especial después de set:", modalEspecialVisible);
-      return;  
-    }
+    
   
-    setModalEspecialVisible(false);
     setModalVisible(true);
     actualizarHorariosDisponibles(nuevaFecha);
   };
@@ -75,35 +87,13 @@ const Home = () => {
     const horarios = [];
     const turnosDelDia = (turnos || []).filter(t => t.fecha === fechaSeleccionada).map(t => t.hora);
     const ahora = new Date();
-    const fechaSeleccionadaDate = new Date(fechaSeleccionada + "T00:00:00"); // 🔹 Convertir a Date
-    
-    let hora = 10;
-    let minutos = 0;
+    const fechaSeleccionadaDate = new Date(fechaSeleccionada + "T00:00:00");
   
-    while (hora < 13) {
-      const horaStr = `${hora.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}`;
-      const horaSeleccionada = new Date(fechaSeleccionadaDate);
-      horaSeleccionada.setHours(hora, minutos, 0, 0);  
+    const diaSemanaNombre = fechaSeleccionadaDate.toLocaleDateString('es-AR', { weekday: 'long' }).toLowerCase();
+    const posiblesHoras = horasDelDia[diaSemanaNombre] || []; // trae horas permitidas desde backend
   
-      // ✅ Corrección: Si la fecha es hoy, comparar solo la hora
-      if (
-        (fechaSeleccionadaDate.getTime() !== ahora.setHours(0, 0, 0, 0) || horaSeleccionada.getTime() > ahora.getTime()) &&
-        !turnosDelDia.includes(horaStr)
-      ) {
-        horarios.push(horaStr);
-      }
-  
-      minutos += 45;
-      if (minutos >= 60) {
-        minutos -= 60;
-        hora++;
-      }
-    }
-  
-    hora = 15;
-    minutos = 0;
-    while (hora < 21) {
-      const horaStr = `${hora.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}`;
+    posiblesHoras.forEach((horaStr) => {
+      const [hora, minutos] = horaStr.split(':').map(Number);
       const horaSeleccionada = new Date(fechaSeleccionadaDate);
       horaSeleccionada.setHours(hora, minutos, 0, 0);
   
@@ -113,21 +103,15 @@ const Home = () => {
       ) {
         horarios.push(horaStr);
       }
-  
-      minutos += 45;
-      if (minutos >= 60) {
-        minutos -= 60;
-        hora++;
-      }
-    }
+    });
   
     setHorariosDisponibles(horarios);
   };
+  
 
   const handleHorarioClick = (hora) => {
     setHorarioSeleccionado(hora); // Actualiza el estado con el horario seleccionado
   };
-  
   
   
   
@@ -143,35 +127,42 @@ const Home = () => {
   const confirmarTurno = async () => {
     if (!horarioSeleccionado || !cliente || !servicio) return;
   
-    // Validación de que no se pueda crear turno en fin de semana
-    const fechaSeleccionadaDate = new Date(fechaSeleccionada);
-    const diaSeleccionado = fechaSeleccionadaDate.getDay(); // 0 es domingo, 6 es sábado
+    try {
+      const nuevoTurno = {
+        cliente,
+        fecha: fechaSeleccionada,
+        hora: horarioSeleccionado,
+        servicio,
+      };
   
-    if (diaSeleccionado === 0 || diaSeleccionado === 6) {
-      alert('No se pueden crear turnos los fines de semana.');
-      setConfirmacionVisible(false); // Cerrar la ventana de confirmación
-      return;
+      await createTurno(nuevoTurno);
+      setMensajeExito('¡Turno creado correctamente!');
+  
+      // ✅ Agregamos el nuevo turno al estado
+      setTurnos(prev => [...prev, nuevoTurno]);
+  
+      // ✅ Volvemos a calcular los horarios disponibles
+      actualizarHorariosDisponibles(fechaSeleccionada);
+  
+      // Limpiar formulario y cerrar modal después de 3 segundos
+      setTimeout(() => {
+        setMensajeExito('');
+        setCliente('');
+        setFechaSeleccionada('');
+        setServicio('');
+        setHorarioSeleccionado('');
+        setHorariosDisponibles([]);
+        setModalVisible(false);
+        setConfirmacionVisible(false);
+      }, 1000);
+  
+      setConfirmacionVisible(false);
+    } catch (error) {
+      console.error("Error al crear turno:", error);
+      alert("Hubo un problema al crear el turno.");
     }
-  
-    // Crear el turno
-    await createTurno({ cliente, fecha: fechaSeleccionada, hora: horarioSeleccionado, servicio });
-    setMensajeExito('¡Turno creado correctamente!');
-  
-    // Esperar 3 segundos antes de limpiar el formulario y cerrar el modal
-    setTimeout(() => {
-      setMensajeExito(''); // Limpiar el mensaje de éxito
-      setCliente(''); // Limpiar el nombre del cliente
-      setFechaSeleccionada(''); // Limpiar la fecha seleccionada
-      setServicio(''); // Limpiar el servicio seleccionado
-      setHorarioSeleccionado(''); // Limpiar el horario seleccionado
-      setHorariosDisponibles([]); // Limpiar los horarios disponibles
-      setModalVisible(false); // Cerrar el modal de creación de turno
-      setConfirmacionVisible(false); // Cerrar la ventana de confirmación
-    }, 3000); // 3 segundos
-  
-    // Cerrar la ventana de confirmación inmediatamente después de confirmar el turno
-    setConfirmacionVisible(false); // Esta línea cierra la ventana de confirmación después de crear el turno
   };
+  
   
   // Función para determinar si el día es un fin de semana (sábado o domingo)
   const esFinDeSemana = (fecha) => {
@@ -269,16 +260,7 @@ const Home = () => {
     </div>
   )}
 
-  {/* Modal especial para sábados y domingos (🚨 MOVIDO AQUÍ 🚨) */}
-  {modalEspecialVisible && (
-    <div className="modal-especial-overlay">
-      <div className="modal-especial-content">
-        <p>⚠️ Sábados y domingos son para turnos especiales.</p>
-        <p>📞 Comunicate con +54 9 351 542 7973</p>
-        <button onClick={() => setModalEspecialVisible(false)}>Cerrar</button>
-      </div>
-    </div>
-  )}
+
 
   {/* Ventana emergente de confirmación */}
   {confirmacionVisible && (

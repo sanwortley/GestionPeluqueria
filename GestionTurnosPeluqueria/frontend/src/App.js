@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import Navbar from './components/Navbar';
 
+
 function App() {
   return (
     <Router>  
