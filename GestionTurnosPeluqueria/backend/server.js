@@ -78,7 +78,7 @@ async function startServer() {
     }
   };
 
-  // LOGIN
+  // REGISTER
   app.post('/api/register', async (req, res) => {
     console.log("🟡 Datos recibidos en /api/register:", req.body);
     const { nombre, email, password } = req.body;
@@ -103,6 +103,7 @@ async function startServer() {
     }
   });
 
+  // LOGIN
   app.post('/api/login', async (req, res) => {
     const { email, password } = req.body;
     const usuario = await Usuario.findOne({ email });
@@ -118,7 +119,15 @@ async function startServer() {
 
     if (usuario.role === 'dueño') {
       const token = jwt.sign({ id: usuario._id, role: usuario.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
-      res.json({ token });
+
+      // ✅ Aquí se devuelve también el role para que el frontend lo valide correctamente
+      res.json({
+        token,
+        role: usuario.role,
+        nombre: usuario.nombre,
+        email: usuario.email,
+        id: usuario._id
+      });
     } else {
       res.status(403).json({ message: 'No tienes permisos para acceder al dashboard' });
     }
@@ -135,7 +144,7 @@ async function startServer() {
     }
   });
 
-//TURNOS
+  // TURNOS
   app.get('/api/turnos', async (req, res) => {
     try {
       const turnos = await Turno.find();
@@ -145,25 +154,23 @@ async function startServer() {
     }
   });
 
-  // Crear un nuevo turno
-app.post('/api/turnos', async (req, res) => {
-  const { fecha, hora, cliente, servicio, usuarioId } = req.body;
+  app.post('/api/turnos', async (req, res) => {
+    const { fecha, hora, cliente, servicio, usuarioId } = req.body;
 
-  if (!fecha || !hora || !cliente || !servicio) {
-    return res.status(400).json({ message: 'Faltan datos obligatorios' });
-  }
+    if (!fecha || !hora || !cliente || !servicio) {
+      return res.status(400).json({ message: 'Faltan datos obligatorios' });
+    }
 
-  try {
-    const nuevoTurno = new Turno({ fecha, hora, cliente, servicio, usuarioId });
-    await nuevoTurno.save();
-    res.status(201).json({ message: 'Turno creado exitosamente', turno: nuevoTurno });
-  } catch (err) {
-    res.status(500).json({ message: 'Error al crear el turno', error: err.message });
-  }
-});
+    try {
+      const nuevoTurno = new Turno({ fecha, hora, cliente, servicio, usuarioId });
+      await nuevoTurno.save();
+      res.status(201).json({ message: 'Turno creado exitosamente', turno: nuevoTurno });
+    } catch (err) {
+      res.status(500).json({ message: 'Error al crear el turno', error: err.message });
+    }
+  });
 
-
-//HORARIOS
+  // HORARIOS
   app.post("/api/horarios", async (req, res) => {
     try {
       const datos = req.body;

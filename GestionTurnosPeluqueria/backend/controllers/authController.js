@@ -1,17 +1,31 @@
-const jwt = require("jsonwebtoken");
+// authController.js
+const jwt = require('jsonwebtoken');
+const Usuario = require('../models/Usuario');
 
-const authMiddleware = (req, res, next) => {
-    const token = req.header("Authorization") && req.header("Authorization").split(' ')[1];  // Obtener solo el token (sin el "Bearer")
+const login = async (req, res) => {
+  const { email, contraseña } = req.body;
 
-    if (!token) return res.status(401).json({ message: "Acceso denegado" });
+  try {
+    const usuario = await Usuario.findOne({ email });
 
-    try {
-        const verified = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = verified;
-        next();
-    } catch (err) {
-        res.status(400).json({ message: "Token inválido" });
+    if (!usuario || usuario.contraseña !== contraseña) {
+      return res.status(401).json({ message: 'Credenciales inválidas' });
     }
-};
 
-module.exports = authMiddleware;
+    const token = jwt.sign({ id: usuario._id }, process.env.JWT_SECRET, {
+      expiresIn: '1d',
+    });
+
+    res.json({
+      token,
+      usuario: {
+        id: usuario._id,
+        nombre: usuario.nombre,
+        email: usuario.email,
+        rol: usuario.rol, // 👈 Esto es clave
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Error en el login' });
+  }
+};

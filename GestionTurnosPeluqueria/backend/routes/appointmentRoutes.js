@@ -1,8 +1,10 @@
-const express = require("express");
-const { bookAppointment, getAppointments } = require("../controllers/appointmentController");
+const express = require('express');
 const router = express.Router();
+const { authMiddleware, requireDueno } = require('../middleware/authMiddleware');
 
-router.post("/book", bookAppointment);
-router.get("/", getAppointments);
+// Ruta protegida
+router.get('/dashboard', authMiddleware, requireDueno, (req, res) => {
+  res.json({ message: 'Bienvenido al dashboard, dueño' });
+});
 
 module.exports = router;

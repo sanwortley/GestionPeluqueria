@@ -1,22 +1,30 @@
-// src/context/AuthContext.js
-import React, { createContext, useState, useContext } from 'react';
+import { createContext, useContext, useState } from 'react';
 
-// Crear el contexto
 const AuthContext = createContext();
 
-// Componente para envolver la app y proporcionar el contexto
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+export function AuthProvider({ children }) {
+  const [auth, setAuth] = useState(() => {
+    const stored = localStorage.getItem('auth');
+    return stored ? JSON.parse(stored) : null;
+  });
 
-  const login = (userData) => setUser(userData);
-  const logout = () => setUser(null);
+  const login = (data) => {
+    setAuth(data);
+    localStorage.setItem('auth', JSON.stringify(data));
+  };
+
+  const logout = () => {
+    setAuth(null);
+    localStorage.removeItem('auth');
+  };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ auth, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
-};
+}
 
-// Hook para usar el contexto en componentes
-export const useAuth = () => useContext(AuthContext);
+export function useAuth() {
+  return useContext(AuthContext);
+}
