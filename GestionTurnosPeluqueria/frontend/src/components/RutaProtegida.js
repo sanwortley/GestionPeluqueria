@@ -1,14 +1,8 @@
-import { Navigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { Navigate } from 'react-router-dom';
 
 const RutaProtegida = ({ children }) => {
-  const { auth } = useAuth();
-
-  if (!auth || auth.role !== 'dueño') {
-    return <Navigate to="/login" replace />;
-  }
-
-  return children;
+  const token = localStorage.getItem('token');
+  return token ? children : <Navigate to="/login" replace />;
 };
 
 export default RutaProtegida;
