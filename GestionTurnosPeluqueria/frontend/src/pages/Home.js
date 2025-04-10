@@ -56,6 +56,7 @@ const Home = () => {
           },
         });
         const data = await response.json();
+        console.log("🕒 Horarios del backend:", data); // ⬅️ AÑADIR ESTO
         setHorasDelDia(data); // data debería ser un objeto tipo { lunes: [...], martes: [...], ... }
       } catch (error) {
         console.error("Error al obtener horarios desde el backend:", error);
@@ -89,8 +90,10 @@ const Home = () => {
     const ahora = new Date();
     const fechaSeleccionadaDate = new Date(fechaSeleccionada + "T00:00:00");
   
-    const diaSemanaNombre = fechaSeleccionadaDate.toLocaleDateString('es-AR', { weekday: 'long' }).toLowerCase();
-    const posiblesHoras = horasDelDia[diaSemanaNombre] || []; // trae horas permitidas desde backend
+    const dias = ["domingo", "lunes", "martes", "miercoles", "jueves", "viernes", "sabado"];
+    const diaSemanaNombre = dias[fechaSeleccionadaDate.getDay()]; // ✅ mapeo seguro
+  
+    const posiblesHoras = horasDelDia[diaSemanaNombre] || [];
   
     posiblesHoras.forEach((horaStr) => {
       const [hora, minutos] = horaStr.split(':').map(Number);
@@ -107,6 +110,7 @@ const Home = () => {
   
     setHorariosDisponibles(horarios);
   };
+  
   
 
   const handleHorarioClick = (hora) => {
